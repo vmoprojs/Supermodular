@@ -1,0 +1,18 @@
+Package: Supermodular
+Type: Package
+Title: An R package to test Supermodular feature in a model context
+Version: 0.1.0
+Authors@R: c(person("Wilson", "Perez-Oviedo", role = c("aut"),
+                     email = "wperez@flacso.edu.ec"),person("Juan", "Fernandez-Sastre", role = c("aut"),
+                     email = "jfernandez@flacso.edu.ec"),person("William", "Echeverria", role = c("aut"),
+                     email = "willecheverriat@gmail.com"),
+              person("Víctor", "Morales-Oñate", role = "aut",email = "victor.morales@uv.cl"))
+Author: Wilson Perez-Oviedo [aut],Juan Fernandez-Sastre [aut],William Echeverria [aut],
+  Víctor Morales-Onate [aut,cre]
+Maintainer: The package maintainer <victor.morales@uv.cl>
+Description: A routine created to identify super modular variables and observations in a dataset.
+License: GPL (>= 2)
+URL: https://github.com/vmoprojs/Supermodular 
+Repository: GitHub
+Encoding: UTF-8
+LazyData: true
