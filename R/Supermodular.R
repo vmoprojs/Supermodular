@@ -14,7 +14,7 @@
 #   Test Package:              'Cmd + Shift + T'
 
 
-Supermodular <- function(ff= NULL,nboot = 10,semilla = NULL,DF = NULL)
+Supermodular <- function(ff= NULL,nboot = 10,semilla = NULL,DF = NULL,track = TRUE)
 {
   if(is.null(ff)) stop("A formula must be passed to funtion to ff argument")
   if(is.null(DF)) stop("A dataframe must be passed to DF argument")
@@ -25,7 +25,7 @@ Supermodular <- function(ff= NULL,nboot = 10,semilla = NULL,DF = NULL)
 
 
   #************************** ST: Step 3: Bootstrap
-  sol <- superBoot(nboot,semilla,DF,f.lm=ff)
+  sol <- superBoot(nboot,semilla,DF,f.lm=ff,track)
 
   #************************** END: Step 3: Bootstrap
 
@@ -72,7 +72,7 @@ Supermodular <- function(ff= NULL,nboot = 10,semilla = NULL,DF = NULL)
     # plot(s.int)
 
     # ST: Looping through spaces
-    res <- superBetas(s.control,s.int,nboot,sol)
+    res <- superBetas(s.control,s.int,nboot,sol,track)
     # END: Looping through spaces
 
     #************************** ST: Step 4: X-MEN
@@ -82,7 +82,7 @@ Supermodular <- function(ff= NULL,nboot = 10,semilla = NULL,DF = NULL)
     # Supermodularidad: If there is SDom in all combinations of the target variables
     # Then, there is supermodularity in the control space
 
-    SUPER <- superSochastic(res,s.control,s.int)
+    SUPER <- superSochastic(res,s.control,s.int,track)
     respuesta <- list(values = ddd[SUPER,],ids = rownames(ddd)[SUPER]) # Control values where there is supermodularity
     #************************** ST: Step 4.1: Stochastic Dominace (Supermodularidad)
   }

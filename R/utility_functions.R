@@ -61,7 +61,7 @@ fm.treat.model <- function(ff,data = DF)
 
 
 
-superBoot <- function(nboot,semilla,DF,f.lm=ff)
+superBoot <- function(nboot,semilla,DF,f.lm=ff,track)
 {
   n.init <- nrow(DF)
   muestra <- 1:n.init
@@ -80,7 +80,7 @@ superBoot <- function(nboot,semilla,DF,f.lm=ff)
       # some "coef" be "NA". This "if" condition controls fot his issue
       sol <- rbind(sol,aux)
       boot.cont <- boot.cont+1
-      cat("Boot.Iter:", boot.cont,"of ",nboot,"\n")
+      if(track) cat("Boot.Iter:", boot.cont,"of ",nboot,"\n")
     }
   }
   return(sol)
@@ -88,7 +88,7 @@ superBoot <- function(nboot,semilla,DF,f.lm=ff)
 
 
 
-superBetas <- function(s.control,s.int,nboot,sol)
+superBetas <- function(s.control,s.int,nboot,sol,track)
 {
   contador <- 1
   n.tot <- nrow(s.control)*nrow(s.int)*nboot
@@ -101,7 +101,7 @@ superBetas <- function(s.control,s.int,nboot,sol)
       {
         a <- as.numeric(sol[boot,])
         b <- c(1,as.numeric(s.int[itrs,]),as.numeric(s.control[ctrl,]))
-        cat("Iteration:",contador,"of",n.tot,"z.hat",a%*%b,"\n")
+        if(track) cat("Iteration:",contador,"of",n.tot,"z.hat",a%*%b,"\n")
         contador <- contador+1
         res[ctrl,itrs,boot] <- a%*%b
       }
@@ -111,10 +111,11 @@ superBetas <- function(s.control,s.int,nboot,sol)
 }
 
 
-superSochastic <- function(res,s.control,s.int)
+superSochastic <- function(res,s.control,s.int,track)
 {
-  z.range <- range(res)
-  z.vals <- seq(z.range[1],z.range[2],10)
+  # z.range <- range(res)
+  # z.vals <- seq(z.range[1],z.range[2],length.out = 100)
+  z.vals <- quantile(res,probs = seq(0,1,0.01))
 
   SUPER <- NULL
   SUPER.prop <- NULL
@@ -131,7 +132,7 @@ superSochastic <- function(res,s.control,s.int)
         fx <- (ecdf(res[ctrl,i,]))
         fy <- (ecdf(res[ctrl,j,]))
 
-        # Valores x,y in s.int
+        # Values of x,y in s.int
         x <- as.numeric(s.int[i,])
         y <- as.numeric(s.int[j,])
         # xy is the matrix to find the "arrow" relations
@@ -145,14 +146,20 @@ superSochastic <- function(res,s.control,s.int)
         fmin <- ecdf(res[ctrl,ii,])
         fmax <- ecdf(res[ctrl,jj,])
 
+        # z.vals <- c(res[ctrl,i,],res[ctrl,i,],res[ctrl,ii,],res[ctrl,jj,])
+        # z.range <- range(z.vals)
+        # z.vals <- seq(z.range[1],z.range[2],length.out = 10)
+
         # Stochastic dominance condition:
         c.dom <- (fmax(z.vals)+fmin(z.vals)) >= (fx(z.vals)+fy(z.vals))
+        # cat("fmax",fmax(z.vals),"fmin",fmin(z.vals),"fx",fx(z.vals),"fy",fy(z.vals),"\n")
         c.dom.sol <- c(c.dom.sol,all(c.dom))
       }
     }
-    cat("Iter: ",ctrl,"of: ",nrow(s.control),"\n")
+    if(track) cat("Iter: ",ctrl,"of: ",nrow(s.control),"\n")
     SUPER <- c(SUPER,all(c.dom.sol))
     SUPER.prop <- c(SUPER.prop,as.numeric(prop.table(table(c.dom.sol))[2]))
+    # print(SUPER.prop)
   }
   return(SUPER)
 }
