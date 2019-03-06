@@ -151,7 +151,7 @@ superSochastic <- function(res,s.control,s.int,track)
         # z.vals <- seq(z.range[1],z.range[2],length.out = 10)
 
         # Stochastic dominance condition:
-        c.dom <- (fmax(z.vals)+fmin(z.vals)) >= (fx(z.vals)+fy(z.vals))
+        c.dom <- (fmax(z.vals)+fmin(z.vals)) <= (fx(z.vals)+fy(z.vals))
         # cat("fmax",fmax(z.vals),"fmin",fmin(z.vals),"fx",fx(z.vals),"fy",fy(z.vals),"\n")
         c.dom.sol <- c(c.dom.sol,all(c.dom))
       }
